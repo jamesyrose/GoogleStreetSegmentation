@@ -1,0 +1,9 @@
+
+criterion: CE
+model: UNet_CE
+description: UNet with Cross Entropy
+batch_size: 1
+epochs: 50
+learning_rate: 5e-4
+reload: True
+
