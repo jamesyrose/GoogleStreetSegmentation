@@ -1,6 +1,6 @@
 # %%
-from torch.utils.data import Dataset, DataLoader  # For custom data-sets
-import torchvision.transforms as transforms
+# from torch.utils.data import Dataset, DataLoader  # For custom data-sets
+# import torchvision.transforms as transforms
 import numpy as np
 from PIL import Image
 import torch
@@ -48,15 +48,11 @@ labels = [
 
 class IddDataset(Dataset):
 
-    def __init__(self, csv_file, n_class=n_class,
-                 img_transforms=[transforms.ToTensor(),
-                                 transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))],
-                 label_transforms=[]):
+    def __init__(self, csv_file, n_class=n_class):
         self.data = pd.read_csv(csv_file, header=None)
         self.n_class = n_class
         self.mode = csv_file
-        self.transforms = transforms.Compose(img_transforms)
-        self.label_transforms = transforms.Compose(label_transforms)
+
 
     def __len__(self):
         return len(self.data)
