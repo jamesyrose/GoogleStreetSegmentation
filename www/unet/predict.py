@@ -1,12 +1,8 @@
-import os
-# import torch
-# import torchvision.transforms as transforms
-import onnx
-from onnx_tf.backend import prepare
+import onnxruntime as ort
 import bios
 import numpy as np
-# from unet.dataloader import *
 from collections import namedtuple
+import onnxruntime as ort
 
 
 n_class = 27
@@ -57,7 +53,8 @@ class modelPredict():
             except:
                 self.config[k] = v
         model_path = f"./unet/models/{self.config['model']}/model.onnx"
-        self.model =  onnx.load(model_path)
+        # self.model =  onnx.load(model_path)
+        self.model = ort.InferenceSession(model_path)
         # map_location=torch.device('cpu')
 
         # self.model = torch.load(model_path, map_location=map_location)
@@ -92,8 +89,21 @@ class modelPredict():
         print("#" * 20)
         print(im.shape)
 
+        input_name = self.model.get_inputs()[0].name
+        print(input_name)
+        print("$ * 10")
+        tf_rep =  self.model.run(None, {input_name: im}) # prepare(self.model).run(im)
 
-        tf_rep = prepare(self.model).run(im)
+        # outputs = tf_rep[0]
+        # outputs = outputs[:, :, 4:-4]
+        # out = np.argmax(outputs, axis = 1)
+        # pred = self.mapColor(out).squeeze()
+
+        # # path =  f"./unet/models/UNet_CE/model.onnx"
+        # # model = ort.InferenceSession(path)
+        # # # input_name = model.get_inputs()[0].name
+
+        # tf_rep = model.run(None, {input_name: im})
         outputs = tf_rep[0]
         outputs = outputs[:, :, 4:-4]
         out = np.argmax(outputs, axis = 1)

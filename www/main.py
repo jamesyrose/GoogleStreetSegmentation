@@ -39,7 +39,7 @@ def suggestions():
 
     # read image from file
     # image_raw = Image.open("/home/oem/Documents/GoogleStreetSegmentation/www/static/img/default.jpeg")
-    # print(url)
+    print(url)
     response = requests.get(url)
     image_raw = Image.open(BytesIO(response.content))
     
