@@ -1,9 +1,7 @@
-from os import pread
 import sys
-from flask import Flask, render_template, request, send_file
-from io import StringIO, BytesIO
-from PIL import Image, ImageDraw
-from numpy.core.defchararray import mod
+from flask import Flask, render_template, request
+from io import  BytesIO
+from PIL import Image
 import requests
 import base64
 import numpy as np
@@ -40,8 +38,8 @@ def suggestions():
     url = request.args.get('jsdata')
 
     # read image from file
-    # image_raw = Image.open("/home/oem/Documents/GoogleStreetSegmentation/www/static/img/test2.jpeg")
-    print(url)
+    # image_raw = Image.open("/home/oem/Documents/GoogleStreetSegmentation/www/static/img/default.jpeg")
+    # print(url)
     response = requests.get(url)
     image_raw = Image.open(BytesIO(response.content))
     
