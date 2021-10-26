@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+config.py
+config.js
+best_model
+data.pkl

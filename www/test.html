@@ -4,6 +4,10 @@
 
 <head>
     <title>Suggestions</title>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.10.3"></script> -->
+<script src="https://unpkg.com/tfjs-onnx"></script>
+
+<script src="static/js/test.js"></script>
 </head>
 
 <body>
@@ -12,26 +16,6 @@ Search: <input type="text" id="search_form_input"></input>
 
 <div id="place_for_suggestions"></div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-
-<script>
-$("#search_form_input").keyup(function(){
-    var text = $(this).val();
-
-    $.ajax({
-      url: "/suggestions",
-      type: "get",
-      data: {jsdata: text},
-      success: function(response) {
-        $("#place_for_suggestions").html(response);
-      },
-      error: function(xhr) {
-        //Do Something to handle error
-      }
-    });
-});
-</script>
 
 </body>
 
