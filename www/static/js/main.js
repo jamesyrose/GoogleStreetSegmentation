@@ -123,7 +123,8 @@ function segment(manual = false) {
         toggleLoad();
       },
       error: function (xhr) {
-        alert("api keys not found, cannot segment")
+        alert("Segmentation Failed, most likely due to lack of resources (server has 1GB of RAM and 4 threads) \n please try again after a few seconds.")
+        toggleLoad();
       }
     });
 
