@@ -5,13 +5,14 @@
   <meta charset="utf-8">
   <title>Street View service</title>
   <script src='static/js/config.js'></script>
-  <script type="text/javascript"
+  <!-- <script type="text/javascript"
     src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&key={{apiKey}}">
-    </script>
-  <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script> -->
-
-  <script src="static/js/main.js"></script>
+  </script> -->
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js"></script>
   <script src="static/js/canvas_color.js"></script>
+  <script src="static/js/main.js"></script>
 
   <link rel="stylesheet" href="static/css/style.css">
   <link rel="stylesheet" href="static/css/tabs.css">
@@ -51,13 +52,7 @@
                     <canvas id="seg_mask_img" class="overlay" height="512px" width="512px">
                       Sorry, your browser doesn't support the &lt;canvas&gt; element.
                     </canvas>
-                    <!-- <img id="seg_mask_img" src="../static/img/mask.png" class="overlay"> -->
                   </div>
-                  <!-- <div id='raw' style="display: none;">
-                    <canvas id="raw_img" class="overlay" height="512px" width="512px">
-                      Sorry, your browser doesn't support the &lt;canvas&gt; element.     
-                    </canvas>                
-                    </div> -->
                 </div>
               </div>
               <div id="loading" class="loading" style="display:  none;">
@@ -73,8 +68,6 @@
                   </svg>
                 </div>
               </div>
-
-
             </div>
             <div class="row" style="margin-top: 25px">
               <div class="seg_cont">
@@ -277,9 +270,10 @@
 
             <div class="row">
               <div class="seg_cont" id="last_im">
-                <canvas id="raw_img" class="last_im" height="512px" width="512px">
+                <!-- <canvas id="raw_img" class="last_im" height="512px" width="512px">
                   Sorry, your browser doesn't support the &lt;canvas&gt; element.
-                </canvas>
+                </canvas> -->
+                <img id ="raw_img" class="last_im"  src="static/img/default.jpeg" width="512px" height="512px" crossorigin="anonymous"> 
               </div>
               <div class="seg_cont" id="mask_only">
                 <canvas id="seg_mask_img2" class="last_im" height="512px" width="512px">
@@ -309,5 +303,6 @@
 
 
 </body>
+<script src="static/js/predict.js"></script>
 
-</html
+</html>

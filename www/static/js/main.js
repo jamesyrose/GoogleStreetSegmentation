@@ -86,7 +86,9 @@ function getPanoImgURL() {
   var loc = panorama.getPosition();
   var pov = panorama.getPov();
   var size = document.getElementById("pano").getBoundingClientRect()
-  return `https://maps.googleapis.com/maps/api/streetview?size=512x512&location=${loc["lat"]()},${loc["lng"]()}&fov=${180 / 2 ** pov["zoom"]}&heading=${pov["heading"]}&pitch=${pov["pitch"]}&zoom=${pov["zoom"]}&key=${API_KEY}`
+  // return `https://maps.googleapis.com/maps/api/streetview?size=512x512&location=${loc["lat"]()},${loc["lng"]()}&fov=${180 / 2 ** pov["zoom"]}&heading=${pov["heading"]}&pitch=${pov["pitch"]}&zoom=${pov["zoom"]}&key=${API_KEY}`
+  // return "https://webtools.verlet.io/test/static/img/test3.jpeg"
+  return "static/img/default_old.jpeg"
 }
 
 function toggleLoad() {
@@ -104,28 +106,14 @@ function segment(manual = false) {
   // Calls python function using ajax that gets the image from url and then segments it through pytorch model. 
   var panoim = getPanoImgDim();
   if (panoim !== last_im && (auto_seg || manual)) {
+    toggleLoad();
+    var url = getPanoImgURL();
+    url = "https://maps.googleapis.com/maps/api/streetview?size=512x512&location=41.88930216105437,12.4935328695066&fov=89.99999999999999&heading=17.811654981645006&pitch=-15.305973058661124&zoom=1.0000000000000002&key=AIzaSyCUq83yk43jU83mksZDcgPjWnPY9PB6MVk"
+    img = document.getElementById("raw_img")
+    img.src = url
+    modelPredict("raw_img")
+    drawImgCanvas(predicted_image)
     toggleLoad()
-    sleep(750)
-    last_im = panoim;
-    $.ajax({
-      url: "/suggestions",
-      type: "get",
-      data: { jsdata: getPanoImgURL() },
-      success: function (response) {
-        // $("#segmentation").html(response);
-        resp = response.split("||");
-        seg = resp[0];
-        raw = resp[1];
-        assignBase64Canvas("seg_mask_img", seg);
-        assignBase64Canvas("seg_mask_img2", seg);
-        assignBase64Canvas("raw_img", raw);
-        changeOverlayOpacity();
-        toggleLoad();
-      },
-      error: function (xhr) {
-        alert("api keys not found, cannot segment")
-      }
-    });
 
   }
 
@@ -161,7 +149,7 @@ function GetLocation() {
 };
 
 function assignBase64Canvas(id, base64im) {
-  // assigns base 64 image to canvas element
+  // assigns base 64 image to canvas element on load
   var canvas = document.getElementById(id);
   var ctx = canvas.getContext("2d");
 
@@ -181,12 +169,10 @@ document.onclick = function () {
 window.onload = function () {
   // default paths 
   default_mask = "../static/img/default_mask.jpeg"
-  default_img = "../static/img/default.jpeg"
 
   // set canvas for overlays
   assignBase64Canvas("seg_mask_img", default_mask)
   assignBase64Canvas("seg_mask_img2", default_mask)
-  assignBase64Canvas("raw_img", default_img)
 
   // Hover masks to identify obj
   seg_masks_color_id()
