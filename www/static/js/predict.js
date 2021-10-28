@@ -1,5 +1,4 @@
 
-
 const MODEL_URL = 'output/model.pb/model.json';
 var predicted_image;
 
@@ -35,14 +34,12 @@ labels = {
 color_map_keys = Object.keys(labels)
 
 function webgl_support() {
-    // Checks for web gl support (runs slow without)
-    try {
-        var canvas = document.createElement('canvas');
-        return !!window.WebGLRenderingContext &&
-            (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
-    } catch (e) {
-        alert("No WebGL support, segmentation will probably be very slow")
-        return false;
+    try { gl = canvas.getContext("webgl"); }
+    catch (x) { gl = null; }
+    
+    if (gl == null) {
+        try { gl = canvas.getContext("experimental-webgl"); experimental = true; }
+        catch (x) { gl = null; }
     }
 };
 
@@ -94,7 +91,7 @@ function imgTransform(img) {
     return processedImg;
 }
 
-function modelPredict(id) {
+async function modelPredict(id) {
     // finds element with raw image and runs model through. 
     const img = document.getElementById(id);
     const tfImg = tf.browser.fromPixels(img);
@@ -119,6 +116,7 @@ function modelPredict(id) {
 }
 
 function drawImgCanvas(arr) {
+    
     // Takes array of (27,512, 512) and fetchs color code and draws to canvas 
     var c = document.getElementById("seg_mask_img");
     var c2 = document.getElementById("seg_mask_img2");

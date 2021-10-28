@@ -91,7 +91,7 @@ function getPanoImgURL() {
   return "static/img/default_old.jpeg"
 }
 
-function toggleLoad() {
+async function toggleLoad() {
   // Loading screen to stop user from makeing more changes. Only runs when it is segmenting
   var ele = $("#loading")
   if (ele.is(":visible")) {
@@ -101,19 +101,27 @@ function toggleLoad() {
   }
 }
 
+async function updateRawImg(){
+    var url = getPanoImgURL();
+    // url = "https://maps.googleapis.com/maps/api/streetview?size=512x512&location=41.88930216105437,12.4935328695066&fov=89.99999999999999&heading=17.811654981645006&pitch=-15.305973058661124&zoom=1.0000000000000002&key=AIzaSyCUq83yk43jU83mksZDcgPjWnPY9PB6MVk"
+    img = document.getElementById("raw_img")
+    img.src = url
+}
 
 function segment(manual = false) {
   // Calls python function using ajax that gets the image from url and then segments it through pytorch model. 
   var panoim = getPanoImgDim();
   if (panoim !== last_im && (auto_seg || manual)) {
-    toggleLoad();
-    var url = getPanoImgURL();
-    url = "https://maps.googleapis.com/maps/api/streetview?size=512x512&location=41.88930216105437,12.4935328695066&fov=89.99999999999999&heading=17.811654981645006&pitch=-15.305973058661124&zoom=1.0000000000000002&key=AIzaSyCUq83yk43jU83mksZDcgPjWnPY9PB6MVk"
-    img = document.getElementById("raw_img")
-    img.src = url
-    modelPredict("raw_img")
-    drawImgCanvas(predicted_image)
-    toggleLoad()
+    toggleLoad().then(function () {
+      updateRawImg().then(function () {
+        modelPredict("raw_img").then(function () {
+          drawImgCanvas(predicted_image);
+        })
+      })
+      toggleLoad()
+    })
+
+
 
   }
 
