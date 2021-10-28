@@ -4,6 +4,10 @@
 
 <head>
     <title>Suggestions</title>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js"></script>
+
 </head>
 
 <body>
@@ -11,28 +15,11 @@
 Search: <input type="text" id="search_form_input"></input>
 
 <div id="place_for_suggestions"></div>
+<img src="static/img/default.jpeg" id="test"> 
+<canvas id="myCanvas" width="512" height="512"></canvas> <!-- change with real sizes --> 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-
-<script>
-$("#search_form_input").keyup(function(){
-    var text = $(this).val();
-
-    $.ajax({
-      url: "/suggestions",
-      type: "get",
-      data: {jsdata: text},
-      success: function(response) {
-        $("#place_for_suggestions").html(response);
-      },
-      error: function(xhr) {
-        //Do Something to handle error
-      }
-    });
-});
-</script>
 
 </body>
+<script src="static/js/testWorker.js"></script>
 
 </html>
