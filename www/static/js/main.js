@@ -107,7 +107,7 @@ function segment() {
   img.onload = function () {
     toggleLoad()
     segmentOnWorker()
-    setOverlayOpacity()
+    setOverlayOpacity(op  = .5 )
   }
   img.src = getPanoImgURL()
 
@@ -157,7 +157,7 @@ function assignBase64Canvas(id, base64im) {
 
 function setOverlayOpacity(op = 0.5) {
   var val = document.getElementById("opacityOverlay").value
-  document.getElementById("opacityOverlay").value = op
+  document.getElementById("opacityOverlay").value = op  * 100
   var cols = document.getElementsByClassName('overlay')
   for (i = 0; i < cols.length; i++) {
     cols[i].style.opacity = op
