@@ -4,16 +4,16 @@
 <head>
   <meta charset="utf-8">
   <title>Street View service</title>
-  <script src='modules/config.js'></script>
+  <script src='static/js/config.js'></script>
 
+  <script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&key={API KEY}">
+  </script>
 
-
-  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js"></script>
-  <script src="modules/canvas_color.js"></script>
-  <script src="modules/main.js"></script>
-  <script src="modules/predictWorker.js"></script>
+
 
   <link rel="stylesheet" href="static/css/style.css">
   <link rel="stylesheet" href="static/css/tabs.css">
@@ -97,10 +97,7 @@
                   <input id="hover_class" type="checkbox" checked />
                   <label>Show Class On Hover</label>
                 </form>
-                <form onclick="segmentAutomatically()">
-                  <input id="segment_auto" type="checkbox" />
-                  <label>Auto-Segment</label>
-                </form>
+
 
               </div>
 
@@ -287,7 +284,7 @@
           </section>
           <section class="tab-panel" id="about">
             <div class="content">
-              This ia a UNet model usef for semnatic segmentation trained off the India Driving dataset. The website
+              This ia a UNet model used for semnatic segmentation trained off the India Driving dataset. The website
               produces a semantic segmentation of google street view.
               You may navigate around the world and see how it performs on different locations.
               This webpage is implmented using Flask to run the Pytorch model. ONNX did not support some of the layers.
@@ -306,6 +303,7 @@
 
 
 </body>
-<!-- <script src="modules/predict.js"></script> -->
-
+<script src="static/js/canvas_color.js"></script>
+<script src="static/js/main.js"></script>
+<script src="static/js/predictWorker.js"></script>
 </html>

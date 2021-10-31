@@ -5,17 +5,15 @@ importScripts('https://cdn.jsdelivr.net/npm/setimmediate@1.0.5/setImmediate.min.
 importScripts('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.5.0/dist/tf.min.js')
 importScripts('https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js');
 // importScripts('https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js');
-const MODEL_URL = '../../output/model.pb/model.json';
+const MODEL_URL = '../../output/model.pb/model.json'
 var model;
 var res;
 var im;
-
 onmessage = function (e) {
     /*
     e.data["data"] should be a 1d array of Size(512*512*3)
     e.data["gpu"] should be bool for use webgl
     */
-    console.log("recieved")
     if (!model) {
         // load if not loaded
         model = tf.loadGraphModel(MODEL_URL);
@@ -38,13 +36,9 @@ onmessage = function (e) {
                     return b
                 }, [[]])
             })
-            console.log('segment done');
-            if (im) {
-                postMessage(im[0])
-            } else {
-                // if it failed return this
-                postMessage("")
-            }
-        })
+            postMessage(im[0])
+        }).catch((err) => {
+            postMessage("")
+        });
     })
 }

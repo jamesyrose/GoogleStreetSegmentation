@@ -1,6 +1,6 @@
 
-var panorama;
 var API_KEY = config["apiKey"];
+var panorama;
 var last_im;
 var auto_seg = false;
 
@@ -86,9 +86,8 @@ function getPanoImgURL() {
   var loc = panorama.getPosition();
   var pov = panorama.getPov();
   var size = document.getElementById("pano").getBoundingClientRect()
-  // return `https://maps.googleapis.com/maps/api/streetview?size=512x512&location=${loc["lat"]()},${loc["lng"]()}&fov=${180 / 2 ** pov["zoom"]}&heading=${pov["heading"]}&pitch=${pov["pitch"]}&zoom=${pov["zoom"]}&key=${API_KEY}`
-  // return "https://webtools.verlet.io/test/static/img/test3.jpeg"
-  return "static/img/default_old.jpeg"
+  return `https://maps.googleapis.com/maps/api/streetview?size=512x512&location=${loc["lat"]()},${loc["lng"]()}&fov=${180 / 2 ** pov["zoom"]}&heading=${pov["heading"]}&pitch=${pov["pitch"]}&zoom=${pov["zoom"]}&key=${API_KEY}`
+  // return "static/img/default.jpeg" // test img
 }
 
 async function toggleLoad() {
@@ -101,30 +100,18 @@ async function toggleLoad() {
   }
 }
 
-async function updateRawImg(){
-    var url = getPanoImgURL();
-    // url = "https://maps.googleapis.com/maps/api/streetview?size=512x512&location=41.88930216105437,12.4935328695066&fov=89.99999999999999&heading=17.811654981645006&pitch=-15.305973058661124&zoom=1.0000000000000002&key=AIzaSyCUq83yk43jU83mksZDcgPjWnPY9PB6MVk"
-    img = document.getElementById("raw_img")
-    img.src = url
-}
-
 function segment(manual = false) {
   // Calls python function using ajax that gets the image from url and then segments it through pytorch model. 
   var panoim = getPanoImgDim();
   if (panoim !== last_im && (auto_seg || manual)) {
-    toggleLoad().then(function () {
-      updateRawImg().then(function () {
-        modelPredict("raw_img").then(function () {
-          drawImgCanvas(predicted_image);
-        })
-      })
+    // update raw image and segment on load
+    img = document.getElementById("raw_img")
+    img.onload = function () {
       toggleLoad()
-    })
-
-
-
+      segmentOnWorker()
+    }
+    img.src = getPanoImgURL()
   }
-
 }
 
 function sleep(milliseconds) {
@@ -150,7 +137,7 @@ function GetLocation() {
         map.setCenter(new_center)
         panorama.setPosition(new_center)
       } else {
-        alert("api keys invalid")
+        alert("No/Invalid API key")
       }
     });
   }
@@ -194,9 +181,9 @@ window.onload = function () {
   document.addEventListener('mousemove', onMouseMove);
 };
 
-setInterval(function () {
-  segment()
-}, 500);
+// setInterval(function () {
+//   segment()
+// }, 500);
 
 
 

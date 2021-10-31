@@ -34,8 +34,7 @@ function colorMap(idx) {
     return labels[color_map_keys[idx]]
 }
 
-function drawImgCanvas(arr) {
-
+async function drawImgCanvas(arr) {
     // Takes array of (27,512, 512) and fetchs color code and draws to canvas 
     var c = document.getElementById("seg_mask_img");
     var c2 = document.getElementById("seg_mask_img2");
@@ -100,6 +99,7 @@ function webgl_detect(return_context) {
 }
 
 function imgTransform(img) {
+    // Normalization and reshaping to correct tensor, flattened to pass into worker
     img = tf.image.resizeBilinear(img, [512, 512]).div(tf.scalar(255))
     img = tf.cast(img, dtype = 'float32');
 
@@ -142,6 +142,8 @@ function imgTransform(img) {
 }
 
 function prepareT4d() {
+    /*constructs the image into a array  and performs normalization 
+    so that it can be processed in the work*/
     tf.engine().startScope()
     im = document.getElementById("raw_img")
     im = tf.browser.fromPixels(im);
@@ -152,19 +154,23 @@ function prepareT4d() {
 }
 
 async function segmentOnWorker() {
+    // Sends inference to worker model
     data = prepareT4d();
     if (!webgl_detect()) {
-        alert("GPU's not detected, may run slow")
+        alert("WebGL not detected, this may run really slow")
     }
     worker.postMessage(data);
 }
 
 
-worker = new Worker("modules/predict.js")
+worker = new Worker("static/js/predict.js")
 
 worker.onmessage = function (e) {
-    drawImgCanvas(e.data)
-    toggleLoad()
-
     console.log('Message received from worker');
+    if (e.data === ""){
+        alert ("Segmentation Failed, computing resources may be to limited")
+    }else {
+        drawImgCanvas(e.data)
+    }
+    toggleLoad()
 }
