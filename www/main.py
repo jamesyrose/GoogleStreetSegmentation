@@ -6,19 +6,18 @@ import requests
 import base64
 import numpy as np
 from config import config
+from predict import Predict
 
 
-from unet.predict import modelPredict
-sys.path.append("unet")
 
-model = modelPredict()
+model = Predict()
 
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html', apiKey = config["apiKey"])
+    return render_template('index.html')
 
 
 @app.route('/suggestions')
@@ -38,20 +37,14 @@ def suggestions():
     url = request.args.get('jsdata')
 
     # read image from file
-    # image_raw = Image.open("/home/oem/Documents/GoogleStreetSegmentation/www/static/img/default.jpeg")
     # print(url)
     response = requests.get(url)
     image_raw = Image.open(BytesIO(response.content))
+
     
     seg = model.predict(image_raw)
-    
-    seg = np.pad(seg, ((0,8), (0,0), (0, 0)), 'edge')
-    seg = seg / seg.max() * 255
-    # seg = Image.open("/home/oem/Documents/GoogleStreetSegmentation/www/static/img/seg.jpeg")
-
-    #segmentation
     seg = data_to_decode(seg)
-    # raw image 
+    # # raw image 
     raw = data_to_decode(image_raw)
 
 

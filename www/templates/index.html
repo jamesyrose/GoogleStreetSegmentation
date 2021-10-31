@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Street View service</title>
+  <script src='static/js/config.js'></script>
+
+  <script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&key=AIzaSyCUq83yk43jU83mksZDcgPjWnPY9PB6MVk">
+</script>
+
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js"></script>
+
+
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="stylesheet" href="static/css/tabs.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+  <div id="color_class" class="color_class">Class</div>
+
+  <div class="row">
+    <div class="seg_cont">
+      <div class="tabset">
+        <!-- Tab 1 -->
+        <input type="radio" name="tabset" id="tab1" aria-controls="marzen" checked>
+        <label for="tab1">Google Maps</label>
+        <!-- Tab 2 -->
+        <input type="radio" name="tabset" id="tab2" aria-controls="rauchbier">
+        <label for="tab2">Segmentation</label>
+
+        <!-- Tab 3 -->
+        <input type="radio" name="tabset" id="tab3" aria-controls="about">
+        <label for="tab3">About</label>
+        <div class="tab-panels">
+          <section id="marzen" class="tab-panel">
+            <div class="row">
+              <label><b>Address</b></label>
+              <input type="text" id="txtAddress" onkeydown="if(event.keyCode == 13) GetLocation();" class="address_input"></input>
+              <input type="button" onclick="GetLocation()" value="Search" class="address_button" />
+            </div>
+            <div class="row">
+              <div class="seg_cont" style="opacity:0 ">
+                <!-- lazy way to center everything back up -->
+                <div class="slidecontainer"> 
+                <input  type="range" min="1" max="100" value="50" class="slider" 
+                   orient="vertical">
+                  <div class="seg_cont vertical_text">
+                    <div>Overlay Opacity</div>
+                  </div>
+                </div>
+                
+              </div>
+              <div class="seg_cont">
+                <div id="map-canvas" class="box"></div>
+              </div>
+              <div class="seg_cont">
+                <div id="pano" class="box"></div>
+                <div id="segmentation">
+                  <div id='seg'>
+                    <canvas id="seg_mask_img" class="overlay" height="512px" width="512px">
+                      Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                    </canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="seg_cont">
+                <div class="slidecontainer"> 
+                <input onchange="changeOverlayOpacity()" type="range" min="1" max="100" value="50" class="slider" 
+                  id="opacityOverlay" orient="vertical">
+                </div>
+              </div>
+              <div class="seg_cont vertical_text">
+                <div>Overlay Opacity</div>
+              </div>
+              <div id="loading" class="loading" style="display:  none;">
+                <div class="loader loader--style3" title="2">
+                  <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+                    viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                    <path fill="#000"
+                      d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+                      <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25"
+                        to="360 25 25" dur="0.6s" repeatCount="indefinite" />
+                    </path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="margin-top: 25px">
+              <div class="seg_cont">
+                <input type="button" onclick="segment()" value="Segment Image" class="manual_seg" />
+              </div>
+            </div>
+            
+            <div class="row">
+              <!-- <div class="seg_cont">
+                <div class="slidecontainer">
+                  <label>Segmentation Opacity</label>
+                  <input onchange="changeOverlayOpacity()" type="range" min="1" max="100" value="50" class="slider"
+                    id="opacityOverlay" orient="vertical">
+                </div>
+              </div> -->
+              <div class="seg_cont" style="margin-bottom: 15px;">
+                <form onclick="toggleSegOverlay()">
+                  <input id="seg_checkbox" type="checkbox" checked />
+                  <label>Overlay</label>
+                </form>
+              </div>
+              <div class="seg_cont" style=" margin-bottom: 15px;" >
+                <form onclick="toggleHoverClass()">
+                  <input id="hover_class" type="checkbox" checked />
+                  <label>Show Class On Hover</label>
+                </form>
+              </div>
+
+              <div class="row">
+                <div class="seg_cont">
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(128, 64, 128);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> road
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(81, 0, 81);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> drivable fallback
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(244, 35, 232);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> sidewalk
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(152, 251, 152);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> non-drivable fallback
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(220, 20, 60);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> person/animal
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="seg_cont">
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(255, 0, 0);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> rider
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(0, 0, 230);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> motorcycle
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(119, 11, 32);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> bicycle
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(255, 204, 54);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> autorickshaw
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(0, 0, 142);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> car
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="seg_cont">
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(0, 0, 70);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> truck
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(0, 60, 100);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> bus
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(136, 143, 153);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> vehicle fallback
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(220, 190, 40);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> curb
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(102, 102, 156);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> wall
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="seg_cont">
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(190, 153, 153);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> fence
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(180, 165, 180);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> guard rail
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(174, 64, 67);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> billboard
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(220, 220, 0);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> traffic sign
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(250, 170, 30);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> traffic light
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="seg_cont">
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(153, 153, 153);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> pole
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(169, 187, 214);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> obs-str-bar-fallback
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(70, 70, 70);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> building
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(150, 100, 100);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> bridge/tunnel
+                  </div>
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(107, 142, 35);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> vegetation
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="seg_cont">
+                  <div style="width: 200px; float: left; text-align: left">
+                    <svg width="20" height="20">
+                      <rect width="20" height="20" style="fill:rgb(70, 130, 180);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg> sky
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </section>
+          <section id="rauchbier" class="tab-panel">
+
+
+            <div class="row">
+              <div class="seg_cont" id="last_im">
+                <canvas id="raw_img" class="last_im" height="512px" width="512px">
+                  Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+                <!-- <img id="raw_img" class="last_im" src="static/img/default.jpeg" width="512px" height="512px"
+                  crossorigin="anonymous"> -->
+              </div>
+              <div class="seg_cont" id="mask_only">
+                <canvas id="seg_mask_img2" class="last_im" height="512px" width="512px">
+                  Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+              </div>
+            </div>
+
+          </section>
+          <section class="tab-panel" id="about">
+            <div class="content">
+              <h1> About</h1>
+              This is a UNet w/ Weighted Cross Entropy model used for semnatic segmentation trained off the India Driving dataset. The website
+              produces a semantic segmentation of google street view utilizing Google Cloud Platform. The website is built using Flask, JS (JQuery), HTML and CSS. 
+              The model has been converted from PyTorch to ONNX and uses onnxruntime to perform the inference. 
+              <br><br>
+              <h1> Use</h1>
+              You may navigate anywhere in the world using the search bar. It fetches the maps using <a
+              href="https://developers.google.com/maps/documentation/javascript/streetview">Google Maps Javascript
+              API</a>. Clicking on "Segment Image" will run the model to segment the current view. It will produce an overlay on the current map, which
+              can be turned off an on. Clicking on the "Segmentation" tab will show the last segmented image and its segmentation. Howering over the segmentation 
+              images will show you the predict class of that pixel. There are minimal resources on this server, segmentation may overload it, please use
+               <a href = "https://unetstreetview.verlet.io">JS version</a> to run on personal computer
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+<script src="static/js/canvas_color.js"></script>
+<script src="static/js/main.js"></script>
+<script src="static/js/predictWorker.js"></script>
+</html>

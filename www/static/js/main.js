@@ -98,21 +98,35 @@ async function toggleLoad() {
     $("#loading").show("fast")
   }
 }
-
-function segment() {
+function segment(manual = false) {
   // Calls python function using ajax that gets the image from url and then segments it through pytorch model. 
+  toggleLoad()
+  sleep(750)
+  $.ajax({
+    url: "/suggestions",
+    type: "get",
+    data: { jsdata: getPanoImgURL() },
+    success: function (response) {
+      // $("#segmentation").html(response);
+      resp = response.split("||");
+    
+      seg = resp[0];
+      raw = resp[1];
+      assignBase64Canvas("seg_mask_img", seg);
+      assignBase64Canvas("seg_mask_img2", seg);
+      assignBase64Canvas("raw_img", raw);
+      setOverlayOpacity();
+      toggleLoad();
+    },
+    error: function (xhr) {
+      alert("Segmentation Failed, most likely due to lack of resources (server has 1GB of RAM and 4 threads) \n please try again after a few seconds.")
+      toggleLoad();
+    }
+  });
 
-  // update raw image and segment on load
-  img = document.getElementById("raw_img")
-  img.onload = function () {
-    toggleLoad()
-    segmentOnWorker()
-    setOverlayOpacity()
-  }
-  img.src = getPanoImgURL()
+  
 
 }
-
 function sleep(milliseconds) {
   const date = Date.now();
   let currentDate = null;
@@ -176,10 +190,12 @@ document.onclick = function () {
 window.onload = function () {
   // default paths 
   default_mask = "../static/img/default_mask.jpeg"
+  default_img = "../static/img/default.jpeg"
 
   // set canvas for overlays
   assignBase64Canvas("seg_mask_img", default_mask)
   assignBase64Canvas("seg_mask_img2", default_mask)
+  assignBase64Canvas("raw_img", default_img)
 
   // Hover masks to identify obj
   seg_masks_color_id()
