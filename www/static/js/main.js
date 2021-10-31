@@ -77,7 +77,6 @@ function getPanoImgDim() {
   // Used to check if the map has changed so it doesnt try to segment the same image again
   var loc = panorama.getPosition();
   var pov = panorama.getPov();
-  var size = document.getElementById("pano").getBoundingClientRect()
   return `${loc["lat"]().toFixed(4)},${loc["lng"]().toFixed(4)},${pov["heading"].toFixed(4)},${pov["pitch"].toFixed(4)},${pov["zoom"].toFixed(4)}`
 }
 
@@ -100,18 +99,18 @@ async function toggleLoad() {
   }
 }
 
-function segment(manual = false) {
+function segment() {
   // Calls python function using ajax that gets the image from url and then segments it through pytorch model. 
-  var panoim = getPanoImgDim();
-  if (panoim !== last_im && (auto_seg || manual)) {
-    // update raw image and segment on load
-    img = document.getElementById("raw_img")
-    img.onload = function () {
-      toggleLoad()
-      segmentOnWorker()
-    }
-    img.src = getPanoImgURL()
+
+  // update raw image and segment on load
+  img = document.getElementById("raw_img")
+  img.onload = function () {
+    toggleLoad()
+    segmentOnWorker()
+    setOverlayOpacity()
   }
+  img.src = getPanoImgURL()
+
 }
 
 function sleep(milliseconds) {
@@ -125,6 +124,7 @@ function sleep(milliseconds) {
 
 function GetLocation() {
   // Get location of address and changes the maps location
+  setOverlayOpacity(op = 0)
   if ($("#marzen").is(":visible")) {
     var geocoder = new google.maps.Geocoder();
     var address = document.getElementById("txtAddress").value;
@@ -155,10 +155,22 @@ function assignBase64Canvas(id, base64im) {
   image.src = base64im
 }
 
+function setOverlayOpacity(op = 0.5) {
+  var val = document.getElementById("opacityOverlay").value
+  document.getElementById("opacityOverlay").value = op
+  var cols = document.getElementsByClassName('overlay')
+  for (i = 0; i < cols.length; i++) {
+    cols[i].style.opacity = op
+  }
+}
+
 
 document.onclick = function () {
-  // check segment function every click
-  segment()
+  var panoim = getPanoImgDim();
+  if (panoim !== last_im) {
+    setOverlayOpacity(op = 0)
+    last_im = panoim;
+  }
 }
 
 window.onload = function () {

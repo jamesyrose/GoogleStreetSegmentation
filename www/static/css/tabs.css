@@ -200,8 +200,8 @@ h2 {
 }
 
 form {
-  width: 300px;
-  margin: 0 auto 10px;
+  margin-right:  20px;
+  /* margin: 0 auto 10px; */
   text-align: left;
 }
 

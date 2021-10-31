@@ -167,9 +167,9 @@ worker = new Worker("static/js/predict.js")
 
 worker.onmessage = function (e) {
     console.log('Message received from worker');
-    if (e.data === ""){
-        alert ("Segmentation Failed, computing resources may be to limited")
-    }else {
+    if (e.data === "") {
+        alert("Segmentation Failed, computing resources may be to limited")
+    } else {
         drawImgCanvas(e.data)
     }
     toggleLoad()

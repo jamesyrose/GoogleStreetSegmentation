@@ -7,7 +7,7 @@
   <script src='static/js/config.js'></script>
 
   <script type="text/javascript"
-    src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&key={API KEY}">
+    src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&key={{api key}}">
   </script>
 
   <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script> -->
@@ -42,7 +42,22 @@
         <div class="tab-panels">
           <section id="marzen" class="tab-panel">
             <div class="row">
-
+              <label><b>Address</b></label>
+              <input type="text" id="txtAddress" onkeydown="if(event.keyCode == 13) GetLocation();" class="address_input"></input>
+              <input type="button" onclick="GetLocation()" value="Search" class="address_button" />
+            </div>
+            <div class="row">
+              <div class="seg_cont" style="opacity:0 ">
+                <!-- lazy way to center everything back up -->
+                <div class="slidecontainer"> 
+                <input  type="range" min="1" max="100" value="50" class="slider" 
+                   orient="vertical">
+                  <div class="seg_cont vertical_text">
+                    <div>Overlay Opacity</div>
+                  </div>
+                </div>
+                
+              </div>
               <div class="seg_cont">
                 <div id="map-canvas" class="box"></div>
               </div>
@@ -55,6 +70,15 @@
                     </canvas>
                   </div>
                 </div>
+              </div>
+              <div class="seg_cont">
+                <div class="slidecontainer"> 
+                <input onchange="changeOverlayOpacity()" type="range" min="1" max="100" value="50" class="slider" 
+                  id="opacityOverlay" orient="vertical">
+                </div>
+              </div>
+              <div class="seg_cont vertical_text">
+                <div>Overlay Opacity</div>
               </div>
               <div id="loading" class="loading" style="display:  none;">
                 <div class="loader loader--style3" title="2">
@@ -72,33 +96,29 @@
             </div>
             <div class="row" style="margin-top: 25px">
               <div class="seg_cont">
-                <input type="button" onclick="segment(manual=true)" value="Segment Image" class="manual_seg" />
+                <input type="button" onclick="segment()" value="Segment Image" class="manual_seg" />
               </div>
             </div>
+            
             <div class="row">
-              <label>Address</label>
-              <input type="text" id="txtAddress" class="address_input"></input>
-              <input type="button" onclick="GetLocation()" value="Get Location" class="address_button" />
-            </div>
-            <div class="row">
-              <div class="seg_cont">
+              <!-- <div class="seg_cont">
                 <div class="slidecontainer">
                   <label>Segmentation Opacity</label>
                   <input onchange="changeOverlayOpacity()" type="range" min="1" max="100" value="50" class="slider"
-                    id="opacityOverlay">
+                    id="opacityOverlay" orient="vertical">
                 </div>
-              </div>
-              <div class="seg_cont" style="margin-left: 20px;">
+              </div> -->
+              <div class="seg_cont" style="margin-bottom: 15px;">
                 <form onclick="toggleSegOverlay()">
                   <input id="seg_checkbox" type="checkbox" checked />
                   <label>Overlay</label>
                 </form>
+              </div>
+              <div class="seg_cont" style=" margin-bottom: 15px;" >
                 <form onclick="toggleHoverClass()">
                   <input id="hover_class" type="checkbox" checked />
                   <label>Show Class On Hover</label>
                 </form>
-
-
               </div>
 
               <div class="row">
@@ -284,16 +304,16 @@
           </section>
           <section class="tab-panel" id="about">
             <div class="content">
-              This ia a UNet model used for semnatic segmentation trained off the India Driving dataset. The website
-              produces a semantic segmentation of google street view.
-              You may navigate around the world and see how it performs on different locations.
-              This webpage is implmented using Flask to run the Pytorch model. ONNX did not support some of the layers.
+              <h1> About</h1>
+              This is a UNet w/ Weighted Cross Entropy model used for semnatic segmentation trained off the India Driving dataset. The website
+              produces a semantic segmentation of google street view utilizing Google Cloud Platform. The website is built using JS (JQuery), HTML and CSS. 
               <br><br>
-              The website is built using Flask, JS (JQuery), HTML and CSS. The auto-segmentation option will produce
-              some lag because the inference time is a few seconds. The maps are from <a
-                href="https://developers.google.com/maps/documentation/javascript/streetview">Google Maps Javascript
-                API</a>.
-
+              <h1> Use</h1>
+              You may navigate anywhere in the world using the search bar. It fetches the maps using <a
+              href="https://developers.google.com/maps/documentation/javascript/streetview">Google Maps Javascript
+              API</a>. Clicking on "Segment Image" will run the model to segment the current view. It will produce an overlay on the current map, which
+              can be turned off an on. Clicking on the "Segmentation" tab will show the last segmented image and its segmentation. Howering over the segmentation 
+              images will show you the predict class of that pixel. Segmentation can take some time and may crash your computer depending on its computing power.
             </div>
           </section>
         </div>
