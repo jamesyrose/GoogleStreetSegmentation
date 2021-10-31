@@ -103,13 +103,11 @@ function segment(manual = false) {
   toggleLoad()
   sleep(750)
   $.ajax({
-    url: "/suggestions",
+    url: "/predict",
     type: "get",
     data: { jsdata: getPanoImgURL() },
     success: function (response) {
-      // $("#segmentation").html(response);
       resp = response.split("||");
-    
       seg = resp[0];
       raw = resp[1];
       assignBase64Canvas("seg_mask_img", seg);
@@ -123,10 +121,8 @@ function segment(manual = false) {
       toggleLoad();
     }
   });
-
-  
-
 }
+
 function sleep(milliseconds) {
   const date = Date.now();
   let currentDate = null;
@@ -159,6 +155,7 @@ function GetLocation() {
 
 function assignBase64Canvas(id, base64im) {
   // assigns base 64 image to canvas element on load
+  console.log(id)
   var canvas = document.getElementById(id);
   var ctx = canvas.getContext("2d");
 

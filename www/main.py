@@ -20,7 +20,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/suggestions')
+@app.route('/predict')
 def suggestions():
     def data_to_decode(im): 
         image = Image.fromarray(np.uint8(im))
