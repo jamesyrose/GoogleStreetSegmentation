@@ -41,11 +41,33 @@ def suggestions():
     response = requests.get(url)
     image_raw = Image.open(BytesIO(response.content))
 
+
     
     seg = model.predict(image_raw)
+    print(seg.shape)
+    import string
+    import random
+    import matplotlib.pyplot as plt
+    letters = string.ascii_lowercase
+    name = ''.join(random.choice(letters) for i in range(10)) 
+    my_dpi = 100
+    plt.figure(figsize=(512/my_dpi, 512/my_dpi), dpi=130)
+    plt.imshow(seg / 255)
+    plt.axis('off')
+    plt.savefig(f'examples/{name}_seg.png',bbox_inches='tight',pad_inches = 0)
+
+    plt.figure(figsize=(512/my_dpi, 512/my_dpi), dpi=130)
+    plt.imshow(image_raw)
+    plt.axis('off')
+    plt.savefig(f'examples/{name}_raw.png',bbox_inches='tight',pad_inches = 0)
+
+
     seg = data_to_decode(seg)
     # # raw image 
     raw = data_to_decode(image_raw)
+
+
+
 
 
     # html = f'<div id="seg"><img id="seg_mask_img" src="data:image/png;base64,{seg}" class="overlay"></div><div id="raw" style="display: none;"><img id="seg_raw_img" src="data:image/png;base64,{raw}" class="overlay"></div>'

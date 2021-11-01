@@ -68,7 +68,7 @@ class Predict():
         im =  np.expand_dims(img, axis=0)
         tf_rep = self.model.run(None, {self.input_name: im})
         outputs = tf_rep[0]
-        outputs = outputs[:, :, 4:-4]
+        # outputs = outputs[:, :, 4:-4]
 
         out = np.argmax(outputs, axis = 1)
         pred = self.mapColor(out).squeeze()
