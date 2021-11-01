@@ -4,7 +4,6 @@
   }
 
   body, html {
-    padding: 3px 3px 3px 3px;
 
     background-color: #D8DBE2;
 
@@ -58,6 +57,17 @@
   pointer-events: none;
   position: absolute;
   width: 512px;
+  height: 512px;
+  z-index: 1000;
+  opacity: .5;
+  display: block;
+
+}
+
+.overlay2{
+  width: 512px;
+  position: absolute;
+  margin-top: -519px;
   height: 512px;
   z-index: 1000;
   opacity: .5;
@@ -238,4 +248,72 @@ svg rect{
   text-orientation: mixed;
   height: 512px;
   font-size: 20px;
+}
+
+
+#footer { 
+  position: absolute;
+  background-color:  rgba(119, 11, 11, 0);
+  left:0;
+  bottom: 0;
+  width: 100vw;
+  height: 75px;
+}
+
+.slidecontainer2 {
+  position: fixed;
+  z-index: 5000;
+  width:  100vw;
+  height: 75px;
+  background-color:  black;
+  padding-bottom: 16px;
+  padding-top: 16px;
+}
+
+.slider2 {
+  -webkit-appearance: none;
+  margin-left: 10px;
+  width: 750px;
+  height: 25px;
+  background-color:  linear-gradient(-90deg, rgba(0,117,190, 1), rgba(255, 255, 255, 1));
+  background: linear-gradient(-90deg, rgba(0,117,190, 1), rgba(255, 255, 255, 1));
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+
+}
+
+.slider2:hover {
+  opacity: 1;
+}
+
+
+.slider2::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 25px;
+  background: rgb(0, 0, 0);
+  border-color: rgb(66, 217, 255);
+  border-style: solid;
+  border-width: 3px;
+  cursor: pointer;
+}
+
+.slider2::-moz-range-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 25px;
+
+  background: rgb(0, 0, 0);
+  border-color: rgb(66, 217, 255);
+  border-style: solid;
+  border-width: 3px;
+  cursor: pointer;
+}
+
+.oplabel{
+  color: white;
+  font-size: 26px;
 }
