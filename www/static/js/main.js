@@ -1,5 +1,5 @@
 
-var API_KEY = config["apiKey"];
+var API_KEY;
 var panorama;
 var last_im;
 var auto_seg = false;
@@ -191,6 +191,8 @@ window.onload = function () {
     circle.style.top = e.pageY + 'px';
   }
   document.addEventListener('mousemove', onMouseMove);
+
+  API_KEY = config["apiKey"];
 };
 
 // setInterval(function () {

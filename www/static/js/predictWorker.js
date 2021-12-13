@@ -168,7 +168,7 @@ worker = new Worker("static/js/predict.js")
 worker.onmessage = function (e) {
     console.log('Message received from worker');
     if (e.data === "") {
-        alert("Segmentation Failed, computing resources may be to limited")
+        alert("Segmentation Failed, try refreshing the page. Otherwise, there may not be enough computing resources. You can view other options at https://unetstreetview.verlet.io/map")
     } else {
         drawImgCanvas(e.data)
     }

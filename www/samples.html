@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Street View service</title>
+  <script src='static/js/config.js'></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js"></script>
+
+
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="stylesheet" href="static/css/tabs.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+  <div id="color_class" class="color_class">Class</div>
+  <div class="row" style="position: absolute; z-index: 4000;">
+        <div class="seg_cont" style="width:512px; text-align: center; margin-left: -60px">
+            <h1> Street View </h1>
+        </div>
+        <div class="seg_cont" style="width:512px; text-align: center;">
+            <h1> Overlay</h1>
+        </div>
+  </div>  
+  <div class="row" style = "margin-top: 75px;">
+    <div class="seg_cont">
+        <canvas id="jrzqctlnnz_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="jrzqctlnnz_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="jrzqctlnnz_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="qwocqyfxst_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="qwocqyfxst_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="qwocqyfxst_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="ukhetzuqgo_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="ukhetzuqgo_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="ukhetzuqgo_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="xopvriwhiz_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="xopvriwhiz_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="xopvriwhiz_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="fvfpoifqgo_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="fvfpoifqgo_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="fvfpoifqgo_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="rxvcndjxih_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="rxvcndjxih_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="rxvcndjxih_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="quyhrhlsgi_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="quyhrhlsgi_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="quyhrhlsgi_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="qjmpxleagb_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="qjmpxleagb_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="qjmpxleagb_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="aqgpgjwztb_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="aqgpgjwztb_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="aqgpgjwztb_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="ycoxqowjpz_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="ycoxqowjpz_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="ycoxqowjpz_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="crodhtqobu_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="crodhtqobu_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="crodhtqobu_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="gsaenpeuiv_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="gsaenpeuiv_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="gsaenpeuiv_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="ukqjtxzrcz_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="ukqjtxzrcz_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="ukqjtxzrcz_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="onhrhcpuwd_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="onhrhcpuwd_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="onhrhcpuwd_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="ekbduonbaj_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="ekbduonbaj_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="ekbduonbaj_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="izjnladnql_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="izjnladnql_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="izjnladnql_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="iojumzlizz_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="iojumzlizz_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="iojumzlizz_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row">
+    <div class="seg_cont">
+        <canvas id="ntjsfgsixc_raw" class="last_im" height="512px" width="512px">
+    </div>
+    
+    <div class="seg_cont">
+        <canvas id="ntjsfgsixc_raw2" class="last_im" height="512px" width="512px">
+            Sorry, your browser doesn't support the &lt;canvas&gt; element.
+            </canvas>
+        <div id="segmentation">
+            <div>
+                <canvas id="ntjsfgsixc_seg" class="overlay2" height="512px" width="512px">
+                Sorry, your browser doesn't support the &lt;canvas&gt; element.
+                </canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="height: 250px">
+
+</div>
+<div  id="footer">  
+
+    <div class="slidecontainer2"> 
+        <label class="oplabel" for="opactiy">Opacity</label>
+    <input onchange="changeOverlayOpacity()" name = "opacity" type="range" min="1" max="100" value="50" class="slider2" 
+        id="opacityOverlay">
+
+    </div>
+</div>  
+   
+
+</body>
+<script src="static/js/canvas_color.js"></script>
+<script src="static/js/examples.js"></script>
+</html>

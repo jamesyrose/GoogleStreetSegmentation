@@ -7,7 +7,7 @@
   <script src='static/js/config.js'></script>
 
   <script type="text/javascript"
-    src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&key={{api key}}">
+    src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&key=AIzaSyD15L7-Oz5Wq1oBrxpnpPPQhLwPjVYYI3g">
   </script>
 
   <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script> -->
@@ -305,17 +305,20 @@
           <section class="tab-panel" id="about">
             <div class="content">
               <h1> About</h1>
-              This is a UNet w/ Weighted Cross Entropy model used for semnatic segmentation trained off the India Driving dataset. The website
-              produces a semantic segmentation of google street view utilizing Google Cloud Platform. The website is built using JS (JQuery), HTML and CSS. <br><br>
-
-              If this model is to heavy, please use <a href="https:/streetview.verlet.io">the Flask App</a> to view or view <a href="https://unetstreetview.verlet.io/examples.html">examples here</a>
+              This is a UNet w/ Weighted Cross Entropy model used for semnatic segmentation and trained on the India Driving dataset. The website
+              produces a semantic segmentation overlay of the current google street view utilizing Google Cloud Platform (GCP) technologies. The website is run on an Apache webserver 
+              and is built using JavaScript/JQuery, HTML, and CSS. The PyTorch model was converted to a graph model and uses Tensorflow-JS for 
+              in browser inference using WebGL.<br><br>
+              <b>Warning:</b> Segmentation can take some time and may crash your computer depending on its computing power.<br>
+              If your computer is not able to run the model, you may view <a href="https://unetstreetview.verlet.io/samples.html">examples here</a> 
+              or on <a href="https://youtu.be/PWdAJy7p5UI">YouTube</a>
               <br><br>
               <h1> Use</h1>
-              You may navigate anywhere in the world using the search bar. It fetches the maps using <a
+              You may navigate anywhere in the world using the search bar at the top. It fetches the maps using <a
               href="https://developers.google.com/maps/documentation/javascript/streetview">Google Maps Javascript
-              API</a>. Clicking on "Segment Image" will run the model to segment the current view. It will produce an overlay on the current map, which
-              can be turned off an on. Clicking on the "Segmentation" tab will show the last segmented image and its segmentation. Howering over the segmentation 
-              images will show you the predict class of that pixel. Segmentation can take some time and may crash your computer depending on its computing power.
+              API</a>. Clicking on "Segment Image" will run the model to segment the current view. It will produce an overlay on the current panorama view, which
+              can be turned off an on. Clicking on the "Segmentation" tab will show the last segmented image and its segmentation. Hovering over the segmentation 
+              images will show you the predicted class of that pixel. <br> 
             </div>
           </section>
         </div>
